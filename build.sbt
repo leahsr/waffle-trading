@@ -7,3 +7,10 @@ lazy val root = (project in file("."))
     name := "waffle-trading",
     idePackagePrefix := Some("de.thws")
   )
+
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
+  "com.typesafe.akka" %% "akka-stream" % "2.8.5",
+  "com.typesafe.akka" %% "akka-http" % "10.5.2",
+  "com.typesafe.akka" %% "akka-http-spray-json" % "10.5.2",
+)
