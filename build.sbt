@@ -4,8 +4,7 @@ ThisBuild / scalaVersion := "3.7.0"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "waffle-trading",
-    idePackagePrefix := Some("de.thws")
+    name := "waffle-trading"
   )
 
 libraryDependencies ++= Seq(

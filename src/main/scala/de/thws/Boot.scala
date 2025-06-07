@@ -2,7 +2,7 @@ package de.thws
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import de.thws.database.TransactionServiceJdbc
+import de.thws.database.{JdbcTransaction, Migration, TransactionService}
 import de.thws.route.WaffleTradingRoute
 
 import scala.util.Properties
@@ -17,7 +17,10 @@ object Boot extends App {
     val password = Properties.envOrElse("WAFFLE_PASSWORD", "password")
     val url = Properties.envOrElse("WAFFLE_DB_URL", "jdbc:postgresql://localhost:5432/waffle")
 
-    val transactionService = TransactionServiceJdbc(url, user, password)
+    val jdbcTransaction = JdbcTransaction(url, user, password)
+    val transactionService = new TransactionService(jdbcTransaction)
+
+    new Migration(transactionService).perform()
 
 
     val server = Http().newServerAt("localhost", 8080).bind(new WaffleTradingRoute().route)

@@ -1,7 +1,7 @@
 package de.thws
 package service
 
-import domain.WafflePrice
+import de.thws.domain.WafflePrice
 
 import java.util.concurrent.atomic.AtomicReference
 import scala.concurrent.Future
@@ -21,7 +21,7 @@ class WafflePriceService(val initial: Double = 2.5) {
     }
   }
 
-  val ticker = new java.util.Timer()
+  private val ticker = new java.util.Timer()
   ticker.scheduleAtFixedRate(new java.util.TimerTask {
     def run(): Unit = scheduler.run()
   }, 0, 30000) // 30 Sekunden

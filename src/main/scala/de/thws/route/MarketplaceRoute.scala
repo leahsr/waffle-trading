@@ -1,11 +1,10 @@
 package de.thws
 package route
 
-import service.WafflePriceService
-
 import akka.http.scaladsl.server.Directives.{complete, get, path, pathPrefix}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import de.thws.domain.WafflePrice
+import de.thws.service.WafflePriceService
 
 import scala.concurrent.Future
 

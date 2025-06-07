@@ -4,8 +4,8 @@ package route
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directive
 import akka.http.scaladsl.server.Directives.{complete, get, path}
-import de.thws.service.WafflePriceService
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
+import de.thws.service.WafflePriceService
 
 class WaffleTradingRoute {
 

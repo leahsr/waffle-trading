@@ -5,7 +5,7 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 
 import java.sql.Connection
 
-class TransactionServiceJdbc(
+class JdbcTransaction(
                               jdbcUrl: String,
                               user: String,
                               password: String,
