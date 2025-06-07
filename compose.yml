@@ -13,6 +13,11 @@ services:
       POSTGRES_DB: waffle
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "waffle", "-U", "waffle" ]
+      interval: 1s
+      timeout: 1s
+      retries: 10
 
 #  waffle-api:
 #    container_name: waffle-api
@@ -22,6 +27,9 @@ services:
 #      WAFFLE_USER: waffle
 #      WAFFLE_PASSWORD: password
 #      WAFFLE_DB_URL: jdbc:postgresql://waffle-db:5432/waffle
+#    depends_on:
+#      waffle-db:
+#        condition: service_healthy
 
 volumes:
   waffle-data:

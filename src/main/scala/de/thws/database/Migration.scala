@@ -12,18 +12,8 @@ class Migration(transactionService: TransactionService) {
          |WHERE table_name = 'waffle_migration';
          |""".stripMargin
 
-    val runMigration = this.transactionService.executeWithoutRetry { transaction =>
-
-      val resultSet = transaction.prepareStatement(tableExistsSql).executeQuery()
-      
-      resultSet.next() 
-      resultSet.getInt("migration_count") == 0
-    }
-    
-    if(runMigration) {
-      
-      val migrationScript = 
-        s"""
+    val migrationScript =
+      s"""
          |CREATE TABLE waffle_migration (id VARCHAR(36) PRIMARY KEY);
          |
          |CREATE TABLE transaction (
@@ -39,6 +29,22 @@ class Migration(transactionService: TransactionService) {
          |  price DOUBLE PRECISION
          |);
          |""".stripMargin
+
+
+    val runMigration = this.transactionService.executeWithoutRetry { transaction =>
+
+      val resultSet = transaction.prepareStatement(tableExistsSql).executeQuery()
+
+      resultSet.next()
+      resultSet.getInt("migration_count") == 0
+    }
+
+    if (runMigration) {
+
+      this.transactionService.executeWithoutRetry { transaction =>
+        transaction.prepareStatement(migrationScript).execute()
+      }
     }
   }
 }
+
