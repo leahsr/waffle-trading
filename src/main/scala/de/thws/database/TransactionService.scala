@@ -3,7 +3,7 @@ package database
 
 import java.sql.Connection
 
-class TransactionService(transactionServiceJdbc: JdbcTransaction) {
+class TransactionService(transactionServiceJdbc: JdbcConnections) {
 
   def executeWithoutRetry[R](code: Connection => R): R = {
 

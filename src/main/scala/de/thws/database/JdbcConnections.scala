@@ -5,12 +5,12 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 
 import java.sql.Connection
 
-class JdbcTransaction(
-                              jdbcUrl: String,
-                              user: String,
-                              password: String,
-                              numberOfConnections: Int = 10
-                            ) {
+class JdbcConnections(
+                       jdbcUrl: String,
+                       user: String,
+                       password: String,
+                       numberOfConnections: Int = 10
+                     ) {
 
   private val hikariConfig = new HikariConfig()
   hikariConfig.setJdbcUrl(jdbcUrl)

@@ -16,16 +16,19 @@ class Migration(transactionService: TransactionService) {
       s"""
          |CREATE TABLE waffle_migration (id VARCHAR(36) PRIMARY KEY);
          |
+         |CREATE TYPE TRANSACTION_TYPE AS ENUM ('sell', 'buy');
+         |
          |CREATE TABLE transaction (
-         |  id serial PRIMARY KEY,
+         |  transaction_id serial PRIMARY KEY,
          |  timestamp TIMESTAMP,
+         |  transaction_type TRANSACTION_TYPE,
          |  price DOUBLE PRECISION,
          |  quantity INTEGER,
          |  user_name VARCHAR(36)
          |);
          |
          |CREATE TABLE price (
-         |  timestamp TIMESTAMP PRIMARY KEY,
+         |  price_timestamp TIMESTAMP PRIMARY KEY,
          |  price DOUBLE PRECISION
          |);
          |""".stripMargin
