@@ -14,4 +14,5 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.5.2",
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.5.2",
   "org.postgresql" % "postgresql" % "42.7.3",
+  "com.zaxxer" % "HikariCP" % "6.3.0"
 )
