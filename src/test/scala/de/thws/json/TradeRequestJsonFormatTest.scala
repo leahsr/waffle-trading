@@ -1,13 +1,13 @@
 package de.thws.json
 
-import de.thws.domain.{BuyRequest, UserName}
+import de.thws.domain.{TradeRequest, UserName}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import spray.json.JsonParser
 
-class BuyRequestJsonFormatTest extends AnyFlatSpec with Matchers {
+class TradeRequestJsonFormatTest extends AnyFlatSpec with Matchers {
   
-  val buyRequestJsonFormat: BuyRequestJsonFormat = new BuyRequestJsonFormat()
+  val buyRequestJsonFormat: TradeRequestJsonFormat = new TradeRequestJsonFormat()
   
   it should "parse a json to BuyRequest" in {
     
@@ -23,7 +23,7 @@ class BuyRequestJsonFormatTest extends AnyFlatSpec with Matchers {
          |""".stripMargin
     )
     
-    val expectedResult = BuyRequest(UserName(name), quantity)
+    val expectedResult = TradeRequest(UserName(name), quantity)
     
     expectedResult shouldEqual buyRequestJsonFormat.read(json)
   }
