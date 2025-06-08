@@ -20,6 +20,6 @@ object Boot extends App {
 
   new Migration(transactionService).perform()
 
-  val server = Http().newServerAt("localhost", 8080).bind(new WaffleTradingRoute().route)
+  val server = Http().newServerAt("localhost", 8080).bind(new WaffleTradingRoute(transactionService).route)
   println("Server online at http://localhost:8080/\nPress RETURN to stop...")
 }

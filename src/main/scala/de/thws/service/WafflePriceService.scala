@@ -1,30 +1,25 @@
-package de.thws
-package service
+package de.thws.service
 
+import de.thws.database.TransactionService
 import de.thws.domain.WafflePrice
+import de.thws.repository.WafflePriceRepository
 
-import java.util.concurrent.atomic.AtomicReference
-import scala.concurrent.Future
-import scala.util.Random
+class WafflePriceService(
+                     transactionService: TransactionService
+                   ) {
+  
+  private def wafflePriceRepository = WafflePriceRepository.build()
 
-class WafflePriceService(val initial: Double = 2.5) {
-
-  private val priceRef = new AtomicReference(WafflePrice(this.initial))
-
-  private val scheduler = new Runnable {
-    def run(): Unit = {
-      val old = priceRef.get()
-      val change = Random.between(-0.2, 0.2)
-      val newPrice = (old.price + change).max(0.5)
-      println(s"New price: $newPrice")
-      priceRef.set(WafflePrice(BigDecimal(newPrice).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble))
+  def add(wafflePrice: WafflePrice): Unit = {
+    transactionService.executeWithoutRetry { transaction =>
+      wafflePriceRepository.add(wafflePrice, transaction)
     }
   }
 
-  private val ticker = new java.util.Timer()
-  ticker.scheduleAtFixedRate(new java.util.TimerTask {
-    def run(): Unit = scheduler.run()
-  }, 0, 30000) // 30 Sekunden
+  def wafflePriceHistory(): Seq[WafflePrice] = {
+    transactionService.executeWithoutRetry { transaction =>
+      wafflePriceRepository.wafflePriceHistory(transaction)
+    }
+  }
 
-  def currentPrice: Future[WafflePrice] = Future.successful(priceRef.get())
 }
