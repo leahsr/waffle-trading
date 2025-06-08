@@ -72,3 +72,8 @@ class WaffleTransactionsRepository {
     )
   }
 }
+
+object WaffleTransactionsRepository {
+  
+  def build(): WaffleTransactionsRepository = new WaffleTransactionsRepository
+}

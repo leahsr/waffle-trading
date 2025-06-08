@@ -4,23 +4,33 @@ package route
 import akka.http.scaladsl.server.Directives.{complete, get, path, pathPrefix}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import de.thws.domain.WafflePrice
-import de.thws.service.WafflePriceUpdateService
+import de.thws.service.{WafflePriceService, WafflePriceUpdateService}
 
 import scala.concurrent.Future
 
-class MarketplaceRoute(wafflePriceService: WafflePriceUpdateService) {
+class MarketplaceRoute(
+                        wafflePriceUpdateService: WafflePriceUpdateService,
+                        wafflePriceService: WafflePriceService
+                      ) {
 
   val routes = pathPrefix("marketplace") {
     path("price") {
       get {
-        val price: Future[WafflePrice] = this.wafflePriceService.currentPrice
+        val price: Future[WafflePrice] = this.wafflePriceUpdateService.currentPrice
         complete(s"Price $price")
       }
     } ~
-      path("stats") {
+      path("priceHistory") {
         get {
-          complete("Marketplace stats")
+          val priceHistory: Seq[WafflePrice] = this.wafflePriceService.wafflePriceHistory()
+          complete(s"Price History: $priceHistory")
         }
       }
-  }
+  } ~
+    path("stats") {
+      get {
+        complete("Marketplace stats")
+      }
+    }
 }
+

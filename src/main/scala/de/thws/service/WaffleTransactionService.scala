@@ -18,5 +18,5 @@ class WaffleTransactionService(transactionService: TransactionService) {
   }
 
   // TODO: inject?
-  private def waffleTransactionsRepository = WaffleTransactionsRepository()
+  private def waffleTransactionsRepository = WaffleTransactionsRepository.build()
 }

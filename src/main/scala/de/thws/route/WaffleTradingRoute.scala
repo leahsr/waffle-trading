@@ -2,27 +2,27 @@ package de.thws
 package route
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
-import akka.http.scaladsl.server.Directive
+import akka.http.scaladsl.server.{Directive, Route}
 import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import de.thws.database.TransactionService
-import de.thws.service.{WafflePriceService, WafflePriceUpdateService}
+import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
 
 class WaffleTradingRoute(
                         transactionService: TransactionService
                         ) {
+
+  val wafflePriceService = new WafflePriceService(transactionService)
+  val wafflePriceUpdateService = new WafflePriceUpdateService(wafflePriceService = wafflePriceService)
+  val waffleTransactionService = new WaffleTransactionService(transactionService)
 
   val testRoute = path("test") {
     get {
       complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Waffel Trading is running</h1>"))
     }
   }
-  
-  val wafflePriceService = new WafflePriceService(transactionService)
-  val wafflePriceUpdateService = new WafflePriceUpdateService(wafflePriceService = wafflePriceService)
-  
-  val marketplaceRoute = new MarketplaceRoute(wafflePriceUpdateService)
-  val tradingRoute = new TradingRoute()
+  val marketplaceRoute = new MarketplaceRoute(wafflePriceUpdateService, wafflePriceService)
+  val tradingRoute = new TradingRoute(waffleTransactionService)
 
-  val route = testRoute ~ marketplaceRoute.routes ~ tradingRoute.route
+  val route: Route = testRoute ~ marketplaceRoute.routes ~ tradingRoute.route
 }

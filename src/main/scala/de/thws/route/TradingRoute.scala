@@ -3,8 +3,11 @@ package route
 
 import akka.http.scaladsl.server.Directives.{path, pathPrefix, post}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
+import de.thws.service.WaffleTransactionService
 
-class TradingRoute {
+class TradingRoute(
+                  waffleTransactionService: WaffleTransactionService
+                  ) {
 
   val route = pathPrefix("trade") {
     path("buy") {
