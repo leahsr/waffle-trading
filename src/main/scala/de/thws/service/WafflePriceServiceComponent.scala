@@ -2,12 +2,13 @@ package de.thws.service
 
 import de.thws.database.TransactionServiceComponent
 import de.thws.domain.WafflePrice
-import de.thws.repository.WafflePriceRepository
+import de.thws.repository.WafflePriceRepositoryComponent
 
 trait WafflePriceServiceComponent {
-  this: TransactionServiceComponent =>
+  this: TransactionServiceComponent & WafflePriceRepositoryComponent =>
 
   val wafflePriceService: WafflePriceService
+
   class WafflePriceService {
 
     def add(wafflePrice: WafflePrice): Unit = {
@@ -21,9 +22,6 @@ trait WafflePriceServiceComponent {
         wafflePriceRepository.wafflePriceHistory(transaction)
       }
     }
-
-    private def wafflePriceRepository = WafflePriceRepository.build()
-
   }
 }
 

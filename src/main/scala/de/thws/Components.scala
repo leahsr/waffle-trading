@@ -1,21 +1,24 @@
 package de.thws
 
-import de.thws.database.{MigrationComponent, TransactionServiceComponent}
-import de.thws.repository.WaffleTransactionsRepositoryComponent
+import de.thws.database.{JdbcConnectionsComponent, MigrationComponent, TransactionServiceComponent}
+import de.thws.repository.{WafflePriceRepositoryComponent, WaffleTransactionsRepositoryComponent}
 import de.thws.route.{MarketplaceRouteComponent, TradingRouteComponent, WaffleTradingRouteComponent}
 import de.thws.service.{WafflePriceServiceComponent, WafflePriceUpdateServiceComponent, WaffleTransactionServiceComponent}
-import de.thws.database.JdbcConnectionsComponent
 
 trait Components
   extends
-    DatabaseConfigurationComponent,
-    JdbcConnectionsComponent,
     MigrationComponent,
+    JdbcConnectionsComponent,
+    DatabaseConfigurationComponent,
+    // Services
     TransactionServiceComponent,
     WaffleTransactionServiceComponent,
-    WaffleTradingRouteComponent,
-    WaffleTransactionsRepositoryComponent,
-    MarketplaceRouteComponent,
-    TradingRouteComponent,
     WafflePriceServiceComponent,
-    WafflePriceUpdateServiceComponent
+    WafflePriceUpdateServiceComponent,
+    // Repositories
+    WaffleTransactionsRepositoryComponent,
+    WafflePriceRepositoryComponent,
+    // Routes
+    WaffleTradingRouteComponent,
+    MarketplaceRouteComponent,
+    TradingRouteComponent
