@@ -31,5 +31,5 @@ class WafflePriceUpdateService(
     def run(): Unit = scheduler.run()
   }, 0, 30000) // 30 Sekunden
 
-  def currentPrice: Future[WafflePrice] = Future.successful(priceRef.get())
+  def currentPrice: WafflePrice = priceRef.get()
 }

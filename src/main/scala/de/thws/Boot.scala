@@ -5,7 +5,7 @@ import akka.http.scaladsl.Http
 import de.thws.database.{JdbcConnections, Migration, TransactionService}
 import de.thws.json.TradeRequestJsonFormat
 import de.thws.repository.{WafflePriceRepository, WaffleTransactionsRepository}
-import de.thws.route.{MarketplaceRoute, TradingRoute, WaffleTradingRoute}
+import de.thws.route.{MarketplaceRoute, UserRoute, WaffleTradingRoute}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
 
 import scala.util.Properties
@@ -35,8 +35,8 @@ object Boot extends App {
 
 
   val marketplaceRoute = new MarketplaceRoute(wafflePriceService, wafflePriceUpdateService)
-  val tradingRoute = new TradingRoute(transactionService, tradeRequestJsonFormat)
-  val waffleTradingRoute = new WaffleTradingRoute(transactionService, waffleTransactionService, marketplaceRoute, tradingRoute)
+  val userRoute = new UserRoute(waffleTransactionService, wafflePriceUpdateService, tradeRequestJsonFormat)
+  val waffleTradingRoute = new WaffleTradingRoute(transactionService, waffleTransactionService, marketplaceRoute, userRoute)
 
   println("Server online at http://localhost:8080/\nPress RETURN to stop...")
   val server = Http()

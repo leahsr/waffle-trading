@@ -14,7 +14,7 @@ class MarketplaceRoute(wafflePriceService: WafflePriceService, wafflePriceUpdate
   def routes: Route = pathPrefix("marketplace") {
     path("price") {
       get {
-        val price: Future[WafflePrice] = wafflePriceUpdateService.currentPrice
+        val price: WafflePrice = wafflePriceUpdateService.currentPrice
         complete(s"Price $price")
       }
     } ~ path("priceHistory") {

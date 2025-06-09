@@ -9,7 +9,7 @@ class WaffleTransactionService(
                                 waffleTransactionsRepository: WaffleTransactionsRepository,
                                 transactionService: TransactionService
                               ) {
-  def add(waffleTransaction: WaffleTransactionCommand, wafflePrice: WafflePrice): Unit = {
+  def add(waffleTransaction: WaffleTransactionCommand, wafflePrice: WafflePrice): Option[WaffleTransaction] = {
     transactionService.executeWithoutRetry { transaction =>
       waffleTransactionsRepository.add(waffleTransaction, wafflePrice, transaction)
     }

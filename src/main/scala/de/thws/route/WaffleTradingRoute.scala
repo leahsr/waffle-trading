@@ -12,7 +12,7 @@ class WaffleTradingRoute(
                           transactionService: TransactionService,
                           waffleTransactionService: WaffleTransactionService,
                           marketplaceRoute: MarketplaceRoute,
-                          tradingRoute: TradingRoute
+                          userRoute: UserRoute
                         ) {
 
   val testRoute: Route = path("test") {
@@ -21,5 +21,5 @@ class WaffleTradingRoute(
     }
   }
 
-  def route: Route = testRoute ~ marketplaceRoute.routes ~ tradingRoute.route
+  def route: Route = testRoute ~ marketplaceRoute.routes ~ userRoute.route
 }
