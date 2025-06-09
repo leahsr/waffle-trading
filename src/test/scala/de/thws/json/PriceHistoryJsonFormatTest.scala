@@ -16,34 +16,15 @@ class PriceHistoryJsonFormatTest extends AnyFlatSpec with Matchers {
 
   it should "parse history to json" in {
 
-    val time1 = Instant.now().plus(10, ChronoUnit.SECONDS)
-    val time2 = Instant.now().plus(20, ChronoUnit.SECONDS)
-    val time3 = Instant.now().plus(30, ChronoUnit.SECONDS)
-
+    val (json,wafflePrice) = PriceJsonFormatTest.defaultFixture()
+    
     val priceHistory = WafflePriceHistory(
-      Seq(
-        WafflePrice(Price(2.39), time1),
-        WafflePrice(Price(2.83), time2),
-        WafflePrice(Price(4.39), time3),
-      )
+      Seq(wafflePrice,wafflePrice,wafflePrice)
     )
     
     val expectedJson = JsonParser(
       s"""
-         |[
-         | {
-         |  "${PriceJsonFormat.price}": 2.39,
-         |  "${PriceJsonFormat.timestamp}": "$time1"
-         | },
-         | {
-         |  "${PriceJsonFormat.price}": 2.83,
-         |  "${PriceJsonFormat.timestamp}": "$time2"
-         | },
-         | {
-         | "${PriceJsonFormat.price}": 4.39,
-         |  "${PriceJsonFormat.timestamp}": "$time3"
-         | }
-         |]
+         |[$json, $json, $json]
          |""".stripMargin
     )
     
