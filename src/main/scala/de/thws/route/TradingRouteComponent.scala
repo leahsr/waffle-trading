@@ -1,12 +1,12 @@
 package de.thws
 package route
 
-import akka.http.scaladsl.server.Directives.{as, entity, path, pathPrefix, post}
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.server.Directives.{as, complete, entity, path, pathPrefix, post}
+import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
-import spray.json._
-
+import spray.json.*
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import de.thws.database.TransactionServiceComponent
 import de.thws.domain.TradeRequest
@@ -16,16 +16,15 @@ trait TradingRouteComponent {
   this: TransactionServiceComponent & TradeRequestJsonFormatComponent =>
 
   val tradingRoute: TradingRoute
-  implicit val jsonFormat: TradeRequestJsonFormat = tradeRequestJsonFormat
-
-  class TradingRoute {
-
+  
+  class TradingRoute extends SprayJsonSupport with DefaultJsonProtocol {
+    
     def route: Route = pathPrefix("trade") {
      
       post {
         entity(as[TradeRequest]) { req =>
-          globalVolume += req.amount
-          complete(StatusCodes.OK)
+            println(req)
+            complete(StatusCodes.OK)
         }
       }
     }
