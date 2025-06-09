@@ -1,6 +1,6 @@
 package de.thws.json
 
-import de.thws.domain.{TradeRequest, UserName, WaffleTransactionType}
+import de.thws.domain.{Quantity, TradeRequest, UserName, WaffleTransactionType}
 import spray.json.DefaultJsonProtocol.{IntJsonFormat, StringJsonFormat}
 import spray.json.{JsValue, RootJsonReader}
 
@@ -16,7 +16,7 @@ class TradeRequestJsonFormat extends RootJsonReader[TradeRequest] {
 
     TradeRequest(
       UserName(userName),
-      quantity,
+      Quantity(quantity),
       WaffleTransactionType(transactionType)
     )
   }

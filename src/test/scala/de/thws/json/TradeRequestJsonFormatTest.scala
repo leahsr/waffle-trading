@@ -1,6 +1,6 @@
 package de.thws.json
 
-import de.thws.domain.{TradeRequest, UserName, WaffleTransactionType}
+import de.thws.domain.{Quantity, TradeRequest, UserName, WaffleTransactionType}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import spray.json.JsonParser
@@ -13,18 +13,19 @@ class TradeRequestJsonFormatTest extends AnyFlatSpec with Matchers {
 
     val name = "Max Mustermann"
     val quantity = 5
+    val transactionType = WaffleTransactionType.Buy
 
     val json = JsonParser(
       s"""
          |{
          |  "${TradeRequestJsonFormat.userName}": "$name",
          |  "${TradeRequestJsonFormat.quantity}": $quantity,
-         |  "${TradeRequestJsonFormat.transactionType}": "${WaffleTransactionType.Buy.value}"
+         |  "${TradeRequestJsonFormat.transactionType}": "${transactionType.value}"
          |}
          |""".stripMargin
     )
 
-    val expectedResult = TradeRequest(UserName(name), quantity, WaffleTransactionType.Buy)
+    val expectedResult = TradeRequest(UserName(name), Quantity(quantity), transactionType)
 
     expectedResult shouldEqual buyRequestJsonFormat.read(json)
   }

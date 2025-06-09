@@ -3,4 +3,6 @@ package domain
 
 import java.time.Instant
 
-case class WafflePrice(price: Double, timestamp: Instant = Instant.now())
+case class WafflePrice(price: Price, timestamp: Instant = Instant.now())
+
+case class Price(value: Double)

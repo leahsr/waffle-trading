@@ -1,7 +1,7 @@
 package de.thws.repository
 
 import de.thws.database.TransactionUtils
-import de.thws.domain.WafflePrice
+import de.thws.domain.{Price, WafflePrice}
 import de.thws.repository.constants.{Properties, Tables}
 
 import java.sql.{Connection, Timestamp}
@@ -22,7 +22,7 @@ class WafflePriceRepository {
 
     TransactionUtils.execute(add, transaction) { prepare =>
       prepare.setTimestamp(1, Timestamp.from(wafflePrice.timestamp))
-      prepare.setDouble(2, wafflePrice.price)
+      prepare.setDouble(2, wafflePrice.price.value)
     }
   }
 
@@ -43,7 +43,7 @@ class WafflePriceRepository {
         while (resultSet.next()) {
           wafflePrices.append(
             WafflePrice(
-              resultSet.getDouble(Properties.Price.price),
+              Price(resultSet.getDouble(Properties.Price.price)),
               resultSet.getTimestamp(Properties.Price.id).toInstant
             )
           )

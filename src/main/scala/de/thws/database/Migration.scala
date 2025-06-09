@@ -18,18 +18,19 @@ class Migration(transactionService: TransactionService) {
          |
          |CREATE TYPE TRANSACTION_TYPE AS ENUM ('sell', 'buy');
          |
+         |CREATE TABLE price (
+         |  price_timestamp_id TIMESTAMP PRIMARY KEY,
+         |  price DOUBLE PRECISION
+         |);
+         |
          |CREATE TABLE transaction (
          |  transaction_id serial PRIMARY KEY,
          |  timestamp TIMESTAMP,
          |  transaction_type TRANSACTION_TYPE,
-         |  price DOUBLE PRECISION,
+         |  price_timestamp_id TIMESTAMP,
          |  quantity INTEGER,
-         |  user_name VARCHAR(36)
-         |);
-         |
-         |CREATE TABLE price (
-         |  price_timestamp TIMESTAMP PRIMARY KEY,
-         |  price DOUBLE PRECISION
+         |  user_name VARCHAR(36),
+         |  FOREIGN KEY (price_timestamp_id) REFERENCES price (price_timestamp_id) 
          |);
          |""".stripMargin
 

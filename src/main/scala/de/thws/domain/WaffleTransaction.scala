@@ -8,9 +8,7 @@ case class TransactionId(value: Int)
 
 case class UserName(value: String)
 
-case class TransactionQuantity(value: Int)
-
-case class TransactionPrice(value: Double)
+case class Quantity(value: Int)
 
 sealed abstract class WaffleTransactionType(val value: String) {
   def pgEnum(): PGobject = {
@@ -34,13 +32,25 @@ object WaffleTransactionType {
   case object Buy extends WaffleTransactionType("buy")
 }
 
+case class WaffleTransactionCommand(
+                                     timestamp: Instant = Instant.now(),
+                                     transactionType: WaffleTransactionType,
+                                     quantity: Quantity,
+                                     userName: UserName,
+                                   ) {
+  def from(tradeRequest: TradeRequest): WaffleTransactionCommand = WaffleTransactionCommand(
+    transactionType =  tradeRequest.transactionType,
+    quantity = tradeRequest.quantity,
+    userName = tradeRequest.userName
+  )
+}
 
 case class WaffleTransaction(
-                              id: Option[TransactionId] = None,
+                              id: TransactionId,
                               timestamp: Instant = Instant.now(),
                               transactionType: WaffleTransactionType,
-                              price: TransactionPrice,
-                              quantity: TransactionQuantity,
+                              price: Price,
+                              quantity: Quantity,
                               userName: UserName,
                             )
 
