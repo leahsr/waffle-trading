@@ -23,17 +23,17 @@ object Boot extends App {
   val transactionService = new TransactionService(jdbcConnections)
   val migration = new Migration(transactionService)
   migration.perform()
-  
+
   val waffleTransactionRepository = new WaffleTransactionsRepository()
   val wafflePriceRepository = new WafflePriceRepository()
 
   val waffleTransactionService = new WaffleTransactionService(waffleTransactionRepository, transactionService)
   val wafflePriceService = new WafflePriceService(transactionService, wafflePriceRepository)
   val wafflePriceUpdateService = new WafflePriceUpdateService(wafflePriceService)
-  
+
   val tradeRequestJsonFormat = TradeRequestJsonFormat()
 
-  
+
   val marketplaceRoute = new MarketplaceRoute(wafflePriceService, wafflePriceUpdateService)
   val tradingRoute = new TradingRoute(transactionService, tradeRequestJsonFormat)
   val waffleTradingRoute = new WaffleTradingRoute(transactionService, waffleTransactionService, marketplaceRoute, tradingRoute)

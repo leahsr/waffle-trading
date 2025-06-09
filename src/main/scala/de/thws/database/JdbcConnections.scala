@@ -1,7 +1,7 @@
 package de.thws.database
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import de.thws.{DatabaseConfiguration, DatabaseConfigurationComponent}
+import de.thws.DatabaseConfiguration
 
 import java.sql.Connection
 

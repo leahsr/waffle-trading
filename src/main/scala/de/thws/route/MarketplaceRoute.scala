@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Directives.{complete, get, path, pathPrefix}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import de.thws.domain.WafflePrice
-import de.thws.service.{WafflePriceService, WafflePriceServiceComponent, WafflePriceUpdateService, WafflePriceUpdateServiceComponent}
+import de.thws.service.{WafflePriceService, WafflePriceUpdateService}
 
 import scala.concurrent.Future
 

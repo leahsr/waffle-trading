@@ -1,8 +1,6 @@
 package de.thws
 package database
 
-import de.thws.database.JdbcConnectionsComponent
-
 import java.sql.Connection
 
 class TransactionService(jdbcConnections: JdbcConnections) {

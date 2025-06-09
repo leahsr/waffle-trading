@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Directives.{as, complete, entity, pathPrefix, p
 import akka.http.scaladsl.server.Route
 import de.thws.database.TransactionService
 import de.thws.domain.TradeRequest
-import de.thws.json.{TradeRequestJsonFormat, TradeRequestJsonFormatComponent}
+import de.thws.json.TradeRequestJsonFormat
 import spray.json.*
 
 

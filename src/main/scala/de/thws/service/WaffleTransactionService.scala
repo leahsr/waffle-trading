@@ -2,7 +2,7 @@ package de.thws.service
 
 import de.thws.database.TransactionService
 import de.thws.domain.{UserName, WaffleTransaction, WaffleTransactions}
-import de.thws.repository.{WaffleTransactionsRepository, WaffleTransactionsRepositoryComponent}
+import de.thws.repository.WaffleTransactionsRepository
 
 
 class WaffleTransactionService(

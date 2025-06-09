@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import akka.http.scaladsl.server.{Directive, Route}
 import de.thws.database.TransactionService
-import de.thws.service.{WaffleTransactionService, WaffleTransactionServiceComponent}
+import de.thws.service.WaffleTransactionService
 
 class WaffleTradingRoute(
                           transactionService: TransactionService,
