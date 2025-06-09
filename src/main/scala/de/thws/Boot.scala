@@ -2,35 +2,41 @@ package de.thws
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import de.thws.repository.WaffleTransactionsRepository
+import de.thws.database.{JdbcConnections, Migration, TransactionService}
+import de.thws.json.TradeRequestJsonFormat
+import de.thws.repository.{WafflePriceRepository, WaffleTransactionsRepository}
+import de.thws.route.{MarketplaceRoute, TradingRoute, WaffleTradingRoute}
+import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
 
 import scala.util.Properties
 
-object Boot extends App, Components {
+object Boot extends App {
   implicit val system: ActorSystem = ActorSystem("waffle-trading")
 
-  override val databaseConfiguration: Boot.DatabaseConfiguration = DatabaseConfiguration(
+  val databaseConfiguration = DatabaseConfiguration(
     user = Properties.envOrElse("WAFFLE_USER", "waffle"),
     password = Properties.envOrElse("WAFFLE_PASSWORD", "password"),
     jdbc_url = Properties.envOrElse("WAFFLE_DB_URL", "jdbc:postgresql://localhost:5432/waffle"),
   )
-  override val migration: Boot.Migration = new Migration
-  override val jdbcConnections: Boot.JdbcConnections = new JdbcConnections
+  val jdbcConnections: JdbcConnections = new JdbcConnections(databaseConfiguration)
 
-  override val transactionService: Boot.TransactionService = new TransactionService
-  override val waffleTransactionService: Boot.WaffleTransactionService = new WaffleTransactionService
-  override val wafflePriceService: Boot.WafflePriceService = new WafflePriceService
-  override val wafflePriceUpdateService: Boot.WafflePriceUpdateService = new WafflePriceUpdateService
+  val transactionService = new TransactionService(jdbcConnections)
+  val migration = new Migration(transactionService)
+  migration.perform()
   
-  override val tradeRequestJsonFormat: Boot.TradeRequestJsonFormat = new TradeRequestJsonFormat
+  val waffleTransactionRepository = new WaffleTransactionsRepository()
+  val wafflePriceRepository = new WafflePriceRepository()
 
-  override val waffleTransactionsRepository: WaffleTransactionsRepository = new WaffleTransactionsRepository
-  override val wafflePriceRepository: Boot.WafflePriceRepository = new WafflePriceRepository
+  val waffleTransactionService = new WaffleTransactionService(waffleTransactionRepository, transactionService)
+  val wafflePriceService = new WafflePriceService(transactionService, wafflePriceRepository)
+  val wafflePriceUpdateService = new WafflePriceUpdateService(wafflePriceService)
+  
+  val tradeRequestJsonFormat = TradeRequestJsonFormat()
 
-  override val waffleTradingRoute: Boot.WaffleTradingRoute = new WaffleTradingRoute
-  override val marketplaceRoute: Boot.MarketplaceRoute = new MarketplaceRoute
-  override val tradingRoute: Boot.TradingRoute = new TradingRoute
-
+  
+  val marketplaceRoute = new MarketplaceRoute(wafflePriceService, wafflePriceUpdateService)
+  val tradingRoute = new TradingRoute(transactionService, tradeRequestJsonFormat)
+  val waffleTradingRoute = new WaffleTradingRoute(transactionService, waffleTransactionService, marketplaceRoute, tradingRoute)
 
   println("Server online at http://localhost:8080/\nPress RETURN to stop...")
   val server = Http()

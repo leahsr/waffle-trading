@@ -1,15 +1,10 @@
 package de.thws.service
 
-import de.thws.database.TransactionServiceComponent
+import de.thws.database.TransactionService
 import de.thws.domain.WafflePrice
-import de.thws.repository.WafflePriceRepositoryComponent
+import de.thws.repository.{WafflePriceRepository, WafflePriceRepositoryComponent}
 
-trait WafflePriceServiceComponent {
-  this: TransactionServiceComponent & WafflePriceRepositoryComponent =>
-
-  val wafflePriceService: WafflePriceService
-
-  class WafflePriceService {
+  class WafflePriceService(transactionService: TransactionService, wafflePriceRepository: WafflePriceRepository) {
 
     def add(wafflePrice: WafflePrice): Unit = {
       transactionService.executeWithoutRetry { transaction =>
@@ -23,6 +18,5 @@ trait WafflePriceServiceComponent {
       }
     }
   }
-}
 
 
