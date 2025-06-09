@@ -37,13 +37,7 @@ case class WaffleTransactionCommand(
                                      quantity: Quantity,
                                      userName: UserName,
                                      timestamp: Instant = Instant.now(),
-                                   ) {
-  def from(tradeRequest: TradeRequest): WaffleTransactionCommand = WaffleTransactionCommand(
-    transactionType =  tradeRequest.transactionType,
-    quantity = tradeRequest.quantity,
-    userName = tradeRequest.userName
-  )
-}
+                                   )
 
 case class WaffleTransaction(
                               id: TransactionId,

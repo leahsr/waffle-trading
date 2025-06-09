@@ -6,33 +6,34 @@ import akka.http.scaladsl.server.Directives.{Segment, path}
 import akka.http.scaladsl.server.{Directives, Route}
 import de.thws.database.TransactionService
 import de.thws.domain.{TradeRequest, UserName}
-import de.thws.json.TradeRequestJsonFormat
+import de.thws.json.{TradeRequestJsonFormat, TransactionJsonFormat}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
 import spray.json.DefaultJsonProtocol
 
-import java.net.URLEncoder
+import java.net.{URLDecoder, URLEncoder}
 import java.nio.charset.StandardCharsets
 
 class UserRoute(
                  val waffleTransactionService: WaffleTransactionService,
                  val priceUpdateService: WafflePriceUpdateService,
-                 implicit val tradeRequestJsonFormat: TradeRequestJsonFormat
+                 implicit val tradeRequestJsonFormat: TradeRequestJsonFormat,
+                 val transactionJsonFormat: TransactionJsonFormat
                ) extends Directives, SprayJsonSupport, DefaultJsonProtocol {
 
 
-  val route: Route = path("user" / Segment) { encodedUserName =>
-    val userName = UserName(URLEncoder.encode(encodedUserName, StandardCharsets.UTF_8.toString))
+  val route: Route = path("user" / Segment / "trade") { encodedUserName =>
 
-    path("trade") {
-      post {
-        entity(as[TradeRequest]) { tradeRequest =>
-          val tradeCommand = tradeRequest.toCommand(userName)
-          val price = priceUpdateService.currentPrice
-          waffleTransactionService
-            .add(tradeCommand, price)
-            .map(r => complete(s"$r"))
-            .getOrElse(complete(StatusCodes.InternalServerError))
-        }
+    val userName = UserName(URLDecoder.decode(encodedUserName, StandardCharsets.UTF_8.toString))
+
+    post {
+      println("trade")
+      entity(as[TradeRequest]) { tradeRequest =>
+        val tradeCommand = tradeRequest.toCommand(userName)
+        val price = priceUpdateService.currentPrice
+        waffleTransactionService
+          .add(tradeCommand, price)
+          .map(r => complete(transactionJsonFormat.write(r)))
+          .getOrElse(complete(StatusCodes.InternalServerError))
       }
     }
   }

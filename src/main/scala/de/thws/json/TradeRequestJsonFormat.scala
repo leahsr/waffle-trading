@@ -9,13 +9,11 @@ class TradeRequestJsonFormat extends RootJsonReader[TradeRequest] {
   override def read(json: JsValue): TradeRequest = {
 
     val fields = json.asJsObject.fields
-
-    val userName = fields(TradeRequestJsonFormat.userName).convertTo[String]
+    
     val quantity = fields(TradeRequestJsonFormat.quantity).convertTo[Int]
     val transactionType = fields(TradeRequestJsonFormat.transactionType).convertTo[String]
 
     TradeRequest(
-      UserName(userName),
       Quantity(quantity),
       WaffleTransactionType(transactionType)
     )
@@ -25,6 +23,5 @@ class TradeRequestJsonFormat extends RootJsonReader[TradeRequest] {
 object TradeRequestJsonFormat {
 
   val quantity = "quantity"
-  val userName = "name"
   val transactionType = "transactionType"
 }

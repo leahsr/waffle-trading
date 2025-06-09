@@ -1,8 +1,8 @@
 package de.thws
 package domain
 
-case class TradeRequest(userName: UserName, quantity: Quantity, transactionType: WaffleTransactionType) {
-  def toCommand(username: UserName): WaffleTransactionCommand =
+case class TradeRequest(quantity: Quantity, transactionType: WaffleTransactionType) {
+  def toCommand(userName: UserName): WaffleTransactionCommand =
     WaffleTransactionCommand(
       userName = userName,
       transactionType = transactionType,

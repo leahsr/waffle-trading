@@ -18,16 +18,15 @@ class TradeRequestJsonFormatTest extends AnyFlatSpec with Matchers {
     val json = JsonParser(
       s"""
          |{
-         |  "${TradeRequestJsonFormat.userName}": "$name",
          |  "${TradeRequestJsonFormat.quantity}": $quantity,
          |  "${TradeRequestJsonFormat.transactionType}": "${transactionType.value}"
          |}
          |""".stripMargin
     )
 
-    val expectedResult = TradeRequest(UserName(name), Quantity(quantity), transactionType)
+    val expectedResult = TradeRequest(Quantity(quantity), transactionType)
 
-    expectedResult shouldEqual buyRequestJsonFormat.read(json)
+    buyRequestJsonFormat.read(json) shouldEqual expectedResult
   }
 
 }

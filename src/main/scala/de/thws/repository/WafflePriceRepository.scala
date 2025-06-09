@@ -1,7 +1,7 @@
 package de.thws.repository
 
 import de.thws.database.TransactionUtils
-import de.thws.domain.{Price, WafflePrice}
+import de.thws.domain.{Price, WafflePrice, WafflePriceHistory}
 import de.thws.repository.constants.{Properties, Tables}
 
 import java.sql.{Connection, Timestamp}
@@ -26,7 +26,7 @@ class WafflePriceRepository {
     }
   }
 
-  def wafflePriceHistory(transaction: Connection): Seq[WafflePrice] = {
+  def wafflePriceHistory(transaction: Connection): WafflePriceHistory = {
     val select =
       s"""
          |SELECT
@@ -48,9 +48,10 @@ class WafflePriceRepository {
             )
           )
         }
-        wafflePrices
+        WafflePriceHistory(wafflePrices
           .sortBy(_.timestamp)
           .toSeq
+        )
       }
     )
   }

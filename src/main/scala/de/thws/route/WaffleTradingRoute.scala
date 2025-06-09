@@ -11,7 +11,7 @@ import de.thws.service.WaffleTransactionService
 class WaffleTradingRoute(
                           transactionService: TransactionService,
                           waffleTransactionService: WaffleTransactionService,
-                          marketplaceRoute: MarketplaceRoute,
+                          marketplaceRoute: PriceRoute,
                           userRoute: UserRoute
                         ) {
 
