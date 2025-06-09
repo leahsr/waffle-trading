@@ -21,6 +21,8 @@ object Boot extends App, Components {
   override val waffleTransactionService: Boot.WaffleTransactionService = new WaffleTransactionService
   override val wafflePriceService: Boot.WafflePriceService = new WafflePriceService
   override val wafflePriceUpdateService: Boot.WafflePriceUpdateService = new WafflePriceUpdateService
+  
+  override val tradeRequestJsonFormat: Boot.TradeRequestJsonFormat = new TradeRequestJsonFormat
 
   override val waffleTransactionsRepository: WaffleTransactionsRepository = new WaffleTransactionsRepository
 

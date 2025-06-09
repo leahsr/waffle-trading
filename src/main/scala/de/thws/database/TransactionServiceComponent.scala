@@ -28,7 +28,6 @@ trait TransactionServiceComponent {
         borrowedTransaction.close()
       }
     }
-
   }
 }
 
