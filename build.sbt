@@ -7,16 +7,9 @@ lazy val root = (project in file("."))
     name := "waffle-trading"
   )
 
-lazy val integrationTests = (project in file("integrationTests"))
-  .dependsOn(root)
-  .settings(
-    publish / skip := true,
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.2.19" % Test,
-      "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.14.3" ,
-      "io.gatling"            % "gatling-test-framework"    % "3.14.3"
-    )
-  ).enablePlugins(GatlingPlugin)
+lazy val IntegrationTest = config("it")
+
+enablePlugins(GatlingPlugin)
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.8.8",
@@ -27,4 +20,6 @@ libraryDependencies ++= Seq(
   "com.zaxxer" % "HikariCP" % "6.3.0",
   "org.scalactic" %% "scalactic" % "3.2.19",
   "org.scalatest" %% "scalatest" % "3.2.19" % "test",
+  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.14.3" % "it",
+  "io.gatling"            % "gatling-test-framework"    % "3.14.3" % "it",
 )
