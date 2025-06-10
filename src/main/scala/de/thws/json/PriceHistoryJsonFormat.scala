@@ -8,7 +8,7 @@ class PriceHistoryJsonFormat(
                             ) extends RootJsonWriter[WafflePriceHistory] {
 
   override def write(obj: WafflePriceHistory): JsValue = JsArray(
-    obj.values.map(wafflePrice => priceJsonFormat.write(wafflePrice)): _*
+    obj.values.map(wafflePrice => priceJsonFormat.write(wafflePrice))*
   )
 }
 
