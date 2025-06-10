@@ -16,7 +16,7 @@ lazy val integrationTests = (project in file("integrationTests"))
       "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.14.3" ,
       "io.gatling"            % "gatling-test-framework"    % "3.14.3"
     )
-  )
+  ).enablePlugins(GatlingPlugin)
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % "2.8.8",
