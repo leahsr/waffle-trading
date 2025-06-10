@@ -2,6 +2,6 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="waffle-trading,waffle-trading.main,waffle-trading.test" />
+    <profile name="sbt 1" modules="waffle-trading,waffle-trading.integrationTests,waffle-trading.integrationTests.main,waffle-trading.integrationTests.test,waffle-trading.it,waffle-trading.it.main,waffle-trading.it.main~1,waffle-trading.it.test,waffle-trading.it.test~1,waffle-trading.main,waffle-trading.test" />
   </component>
 </project>
