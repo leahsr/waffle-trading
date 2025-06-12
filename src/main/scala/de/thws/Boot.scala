@@ -8,7 +8,9 @@ import de.thws.repository.{WafflePriceRepository, WaffleTransactionsRepository}
 import de.thws.route.{PriceRoute, UserRoute, WaffleTradingRoute}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
 
-import scala.util.Properties
+import java.util.concurrent.Executors
+import scala.concurrent.ExecutionContext
+import scala.util.{Failure, Properties, Success}
 
 object Boot extends App {
   implicit val system: ActorSystem = ActorSystem("waffle-trading")
@@ -17,6 +19,7 @@ object Boot extends App {
     user = Properties.envOrElse("WAFFLE_USER", "waffle"),
     password = Properties.envOrElse("WAFFLE_PASSWORD", "password"),
     jdbc_url = Properties.envOrElse("WAFFLE_DB_URL", "jdbc:postgresql://localhost:5432/waffle"),
+    connectionPoolSize = 20
   )
   val jdbcConnections: JdbcConnections = new JdbcConnections(databaseConfiguration)
 
@@ -41,7 +44,8 @@ object Boot extends App {
   val waffleTradingRoute = new WaffleTradingRoute(transactionService, waffleTransactionService, marketplaceRoute, userRoute)
 
   println("Server online at http://localhost:8080/\nPress RETURN to stop...")
-  val server = Http()
+
+  Http()
     .newServerAt("localhost", 8080)
     .bind(waffleTradingRoute.route)
 }

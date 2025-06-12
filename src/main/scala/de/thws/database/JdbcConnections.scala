@@ -13,7 +13,7 @@ class JdbcConnections(databaseConfiguration: DatabaseConfiguration) {
   hikariConfig.setJdbcUrl(databaseConfiguration.jdbc_url)
   hikariConfig.setUsername(databaseConfiguration.user)
   hikariConfig.setPassword(databaseConfiguration.password)
-  hikariConfig.setMaximumPoolSize(10)
+  hikariConfig.setMaximumPoolSize(databaseConfiguration.connectionPoolSize)
   hikariConfig.setConnectionTimeout(1000 * 60)
   hikariConfig.addHealthCheckProperty("connectivityCheckTimeoutMs", "1000")
   hikariConfig.setPoolName("jdbc-transaction-service")

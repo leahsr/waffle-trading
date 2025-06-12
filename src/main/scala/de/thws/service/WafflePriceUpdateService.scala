@@ -4,7 +4,6 @@ package service
 import de.thws.domain.{Price, WafflePrice}
 
 import java.util.concurrent.atomic.AtomicReference
-import scala.concurrent.Future
 import scala.util.Random
 
 class WafflePriceUpdateService(
@@ -29,7 +28,7 @@ class WafflePriceUpdateService(
   private val ticker = new java.util.Timer()
   ticker.scheduleAtFixedRate(new java.util.TimerTask {
     def run(): Unit = scheduler.run()
-  }, 0, 30000) // 30 Sekunden
+  }, 0, 3000) // 30 Sekunden
 
   def currentPrice: WafflePrice = priceRef.get()
 }

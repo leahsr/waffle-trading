@@ -2,28 +2,27 @@ package de.thws
 package route
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.server.Directives.{complete, get, path, pathPrefix}
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
-import de.thws.domain.{WafflePrice, WafflePriceHistory}
+import de.thws.domain.{Price, WafflePrice, WafflePriceHistory}
 import de.thws.json.{PriceHistoryJsonFormat, PriceJsonFormat}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService}
-import spray.json.JsObject
-
-import scala.concurrent.Future
 
 class PriceRoute(
-                        wafflePriceService: WafflePriceService,
-                        wafflePriceUpdateService: WafflePriceUpdateService,
-                        priceJsonFormat: PriceJsonFormat,
-                        priceHistoryJsonFormat: PriceHistoryJsonFormat
-                      ) extends SprayJsonSupport {
+                  wafflePriceService: WafflePriceService,
+                  wafflePriceUpdateService: WafflePriceUpdateService,
+                  priceJsonFormat: PriceJsonFormat,
+                  priceHistoryJsonFormat: PriceHistoryJsonFormat
+                ) extends SprayJsonSupport {
 
-  def routes: Route =
+  def routes: Route = {
+
     path("price") {
       get {
-        val price: WafflePrice = wafflePriceUpdateService.currentPrice
-        complete(priceJsonFormat.write(price))
+        //val price: WafflePrice = wafflePriceUpdateService.currentPrice
+        complete(priceJsonFormat.write(WafflePrice(Price(3))))
       }
     } ~ path("priceHistory") {
       get {
@@ -31,6 +30,7 @@ class PriceRoute(
         complete(priceHistoryJsonFormat.write(priceHistory))
       }
     }
+  }
 } 
 
 

@@ -1,10 +1,10 @@
 package de.thws
 package route
 
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
-import akka.http.scaladsl.server.Directives.{complete, get, path}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.server.Directives.{complete, get, handleExceptions, path}
+import akka.http.scaladsl.server.{ExceptionHandler, Route}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
-import akka.http.scaladsl.server.{Directive, Route}
 import de.thws.database.TransactionService
 import de.thws.service.WaffleTransactionService
 
@@ -21,5 +21,15 @@ class WaffleTradingRoute(
     }
   }
 
-  def route: Route = testRoute ~ marketplaceRoute.routes ~ userRoute.route
+  val exceptionHandler: ExceptionHandler = ExceptionHandler {
+    case e: Exception => {
+
+      println(s"Exception in route $e")
+      complete(HttpResponse(StatusCodes.BadRequest, entity = e.getMessage))
+    }
+  }
+
+  def route: Route = handleExceptions(exceptionHandler) {
+    testRoute ~ marketplaceRoute.routes ~ userRoute.route
+  }
 }
