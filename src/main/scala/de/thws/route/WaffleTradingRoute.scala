@@ -2,7 +2,7 @@ package de.thws
 package route
 
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
-import akka.http.scaladsl.server.Directives.{complete, extractRequestContext, handleExceptions, mapResponse}
+import akka.http.scaladsl.server.Directives.{complete, extractRequestContext, get, handleExceptions, mapResponse, path}
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
 import akka.http.scaladsl.server.{ExceptionHandler, Route}
 import de.thws.database.TransactionService

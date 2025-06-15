@@ -3,7 +3,6 @@ package endpoints
 import de.thws.json.TradeRequestJsonFormat
 import io.gatling.core.Predef.*
 import io.gatling.http.Predef.*
-import io.gatling.http.protocol.HttpProtocolBuilder
 import io.gatling.http.request.builder.HttpRequestBuilder
 
 object APIEndpoints {
@@ -12,7 +11,6 @@ object APIEndpoints {
     .get("/price")
     .check(status.is(200))
   
-
   val priceHistory: HttpRequestBuilder = http("Price History")
     .get("/priceHistory")
     .check(status.is(200))

@@ -10,12 +10,12 @@ import de.thws.route.{PriceRoute, UserRoute, WaffleTradingRoute}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
 
 class AppInitializer {
-  
+
   private val config = ConfigFactory.load("akka.conf")
   implicit val system: ActorSystem = ActorSystem("waffle-trading")
 
   def start(databaseConfiguration: DatabaseConfiguration): Unit = {
-    
+
     val jdbcConnections = new JdbcConnections(databaseConfiguration)
     val transactionService = new TransactionService(jdbcConnections)
     val migration = new Migration(transactionService)

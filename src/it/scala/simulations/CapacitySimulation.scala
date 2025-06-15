@@ -10,7 +10,7 @@ import utils.Utils
 class CapacitySimulation extends Simulation {
   setUp(
     WaffleScenarios.standardTrafficScenario.inject(
-      incrementUsersPerSec(500)
+      incrementUsersPerSec(50)
         .times(10)
         .eachLevelLasting(10)
         .separatedByRampsLasting(4)

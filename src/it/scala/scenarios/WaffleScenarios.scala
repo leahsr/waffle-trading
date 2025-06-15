@@ -20,7 +20,7 @@ object WaffleScenarios {
 
   val standardTrafficScenario: ScenarioBuilder = scenario("Standard Traffic")
     .randomSwitch(
-      0.30 -> Groups.manualUser,
-      0.70 -> Groups.botUser
+      30.0 -> Groups.manualUser,
+      70.0 -> Groups.botUser
     )
 }

@@ -2,11 +2,10 @@ package de.thws
 package route
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
-import de.thws.domain.{Price, WafflePrice, WafflePriceHistory}
+import de.thws.domain.{WafflePrice, WafflePriceHistory}
 import de.thws.json.{PriceHistoryJsonFormat, PriceJsonFormat}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService}
 
