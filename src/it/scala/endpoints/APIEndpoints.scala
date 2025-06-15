@@ -1,5 +1,6 @@
 package endpoints
 
+import de.thws.json.TradeRequestJsonFormat
 import io.gatling.core.Predef.*
 import io.gatling.core.feeder.BatchableFeederBuilder
 import io.gatling.http.Predef.*
@@ -21,5 +22,12 @@ object APIEndpoints {
 
   val sellRequest: HttpRequestBuilder = http("Trade")
     .post("/user/${name}/trade")
+    .asJson
+    .body(StringBody(
+      s"""{
+         |  "${TradeRequestJsonFormat.quantity}": "#{quantity}",
+         |  "${TradeRequestJsonFormat.transactionType}": "#{transactionType}"
+         |}
+         |""".stripMargin))
     .check(status.is(200))
 }

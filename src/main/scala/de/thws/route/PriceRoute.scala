@@ -21,8 +21,8 @@ class PriceRoute(
 
     path("price") {
       get {
-        //val price: WafflePrice = wafflePriceUpdateService.currentPrice
-        complete(priceJsonFormat.write(WafflePrice(Price(3))))
+        val price: WafflePrice = wafflePriceUpdateService.currentPrice
+        complete(priceJsonFormat.write(price))
       }
     } ~ path("priceHistory") {
       get {
