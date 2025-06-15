@@ -24,8 +24,6 @@ class UserRoute(
     val userName = UserName(URLDecoder.decode(encodedUserName, StandardCharsets.UTF_8.toString))
 
     post {
-      println("trade")
-
       entity(as[TradeRequest]) { tradeRequest =>
         val tradeCommand = tradeRequest.toCommand(userName)
         val price = priceUpdateService.currentPrice
