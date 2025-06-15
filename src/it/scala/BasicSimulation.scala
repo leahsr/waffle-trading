@@ -10,11 +10,8 @@ class BasicSimulation extends Simulation {
     .baseUrl("http://localhost:8080")
     .acceptHeader("application/json")
 
-  private val scenario1: ScenarioBuilder = scenario("Scenario 1").exec(http("Session").get("/price"))
-  private val scenario2: ScenarioBuilder = scenario("Scenario 2").exec(APIEndpoints.price)
-  private val sellScenario: ScenarioBuilder = scenario("Sell Request")
-    .feed(APIEndpoints.userNameFeeder)
-    .exec(APIEndpoints.sellRequest)
+ 
+  
 
   private val assertion = global.successfulRequests.count.is(1)
   //  setUp(
@@ -22,6 +19,10 @@ class BasicSimulation extends Simulation {
   //  ).assertions(assertion).protocols(httpProtocol)
 
   setUp(
-    scenario1.inject(rampUsersPerSec(0).to(10000).during(15))
+    WaffleScenarios.tradeScenario.inject(atOnceUsers(1))
   ).protocols(httpProtocol)
+
+//  setUp(
+//    tradeScenario.inject(rampUsersPerSec(0).to(1000).during(10))
+//  ).protocols(httpProtocol)
 }

@@ -2,32 +2,30 @@ package endpoints
 
 import de.thws.json.TradeRequestJsonFormat
 import io.gatling.core.Predef.*
-import io.gatling.core.feeder.BatchableFeederBuilder
 import io.gatling.http.Predef.*
 import io.gatling.http.request.builder.HttpRequestBuilder
 
 object APIEndpoints {
 
-  val userNameFeeder: BatchableFeederBuilder[String] = csv("usernames.csv").circular
-
   val price: HttpRequestBuilder = http("price")
     .get("/price")
     .check(status.is(200))
-    .check(jmesPath("price").saveAs("price"))
+  
 
   val priceHistory: HttpRequestBuilder = http("Price History")
     .get("/priceHistory")
     .check(status.is(200))
     .check(jmesPath("priceHistory").saveAs("priceHistory"))
 
-  val sellRequest: HttpRequestBuilder = http("Trade")
-    .post("/user/${name}/trade")
+  val tradeRequest: HttpRequestBuilder = http("Trade")
+    .post("/user/#{name}/trade")
     .asJson
     .body(StringBody(
       s"""{
-         |  "${TradeRequestJsonFormat.quantity}": "#{quantity}",
+         |  "${TradeRequestJsonFormat.quantity}": #{quantity},
          |  "${TradeRequestJsonFormat.transactionType}": "#{transactionType}"
          |}
          |""".stripMargin))
     .check(status.is(200))
+    .check(jmesPath("quantity").is("#{quantity}"))
 }

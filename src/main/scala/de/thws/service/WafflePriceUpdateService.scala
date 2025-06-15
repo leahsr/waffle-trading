@@ -28,7 +28,7 @@ class WafflePriceUpdateService(
   private val ticker = new java.util.Timer()
   ticker.scheduleAtFixedRate(new java.util.TimerTask {
     def run(): Unit = scheduler.run()
-  }, 0, 3000) // 30 Sekunden
+  }, 0, 30000) // 30 Sekunden
 
   def currentPrice: WafflePrice = priceRef.get()
 }
