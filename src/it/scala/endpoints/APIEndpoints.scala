@@ -24,6 +24,6 @@ object APIEndpoints {
          |  "${TradeRequestJsonFormat.transactionType}": "#{transactionType}"
          |}
          |""".stripMargin))
-    .check(status.is(200))
+    .check(status.is(201))
     .check(jmesPath("quantity").is("#{quantity}"))
 }

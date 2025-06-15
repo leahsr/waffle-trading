@@ -26,13 +26,15 @@ class WafflePriceRepository {
     }
   }
 
-  def wafflePriceHistory(transaction: Connection): WafflePriceHistory = {
+  def wafflePriceHistory(transaction: Connection, amount: Int = 250): WafflePriceHistory = {
     val select =
       s"""
          |SELECT
          |  ${Properties.Price.id},
          |  ${Properties.Price.price}
          |FROM ${Tables.Price}
+         |ORDER BY ${Properties.Price.id} DESC
+         |LIMIT $amount
          |""".stripMargin
 
     TransactionUtils.executeQuery(select, transaction)(
@@ -49,7 +51,6 @@ class WafflePriceRepository {
           )
         }
         WafflePriceHistory(wafflePrices
-          .sortBy(_.timestamp)
           .toSeq
         )
       }
