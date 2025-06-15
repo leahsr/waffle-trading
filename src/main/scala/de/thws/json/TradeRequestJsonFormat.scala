@@ -1,27 +1,19 @@
 package de.thws.json
 
-import de.thws.domain.{Quantity, TradeRequest, UserName, WaffleTransactionType}
-import spray.json.DefaultJsonProtocol.{IntJsonFormat, StringJsonFormat}
-import spray.json.{JsValue, RootJsonReader}
-
-class TradeRequestJsonFormat extends RootJsonReader[TradeRequest] {
-
-  override def read(json: JsValue): TradeRequest = {
-
-    val fields = json.asJsObject.fields
-    
-    val quantity = fields(TradeRequestJsonFormat.quantity).convertTo[Int]
-    val transactionType = fields(TradeRequestJsonFormat.transactionType).convertTo[String]
-
-    TradeRequest(
-      Quantity(quantity),
-      WaffleTransactionType(transactionType)
-    )
-  }
-}
+import cats.effect.IO
+import de.thws.domain.{Quantity, TradeRequest, WaffleTransactionType}
+import io.circe.*
+import org.http4s.EntityDecoder
+import org.http4s.circe.jsonOf
 
 object TradeRequestJsonFormat {
-
   val quantity = "quantity"
   val transactionType = "transactionType"
+
+  given Decoder[TradeRequest] = (c: HCursor) => for {
+    quantity <- c.downField(quantity).as[Int].map(Quantity.apply)
+    transactionType <- c.downField(transactionType).as[String].map(WaffleTransactionType.apply)
+  } yield TradeRequest(quantity, transactionType)
+
+  given EntityDecoder[IO, TradeRequest] = jsonOf[IO, TradeRequest]
 }

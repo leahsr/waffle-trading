@@ -1,5 +1,4 @@
-package de.thws
-package domain
+package de.thws.domain
 
 import java.time.Instant
 

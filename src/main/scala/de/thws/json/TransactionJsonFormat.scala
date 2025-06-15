@@ -1,28 +1,39 @@
 package de.thws.json
 
-import de.thws.domain.WaffleTransaction
-import spray.json.{JsNumber, JsObject, JsString, JsValue, RootJsonWriter}
+import cats.effect.IO
+import de.thws.domain.*
+import io.circe.*
+import org.http4s.{EntityDecoder, EntityEncoder}
+import org.http4s.circe.{jsonEncoderOf, jsonOf}
 
-class TransactionJsonFormat extends RootJsonWriter[WaffleTransaction]{
-  
-  override def write(obj: WaffleTransaction): JsValue = {
-    
-    JsObject(
-      TransactionJsonFormat.id -> JsNumber(obj.id.value),
-      TransactionJsonFormat.timestamp -> JsString(obj.timestamp.toString),
-      TransactionJsonFormat.transactionType -> JsString(obj.transactionType.value),
-      TransactionJsonFormat.quantity -> JsNumber(obj.quantity.value),
-      TransactionJsonFormat.userName -> JsString(obj.userName.value)
-    )
-  }
-}
+import java.time.Instant
 
 object TransactionJsonFormat {
-  
-   val id = "id"
-   val timestamp = "timestamp"
-   val transactionType = "transactionType"
-   val price = "price"
-   val quantity = "quantity"
-   val userName = "userName"
+  val id = "id"
+  val timestamp = "timestamp"
+  val transactionType = "transactionType"
+  val price = "price"
+  val quantity = "quantity"
+  val userName = "userName"
+
+  given Encoder[WaffleTransaction] = (a: WaffleTransaction) => Json.obj(
+    (id, Json.fromInt(a.id.value)),
+    (timestamp, Json.fromString(a.timestamp.toString)),
+    (transactionType, Json.fromString(a.transactionType.value)),
+    (price, Json.fromDouble(a.price.value).get),
+    (quantity, Json.fromInt(a.quantity.value)),
+    (userName, Json.fromString(a.userName.value))
+  )
+
+  given Decoder[WaffleTransaction] = (c: HCursor) => for {
+    id <- c.downField(id).as[Int].map(TransactionId.apply)
+    timestamp <- c.downField(timestamp).as[Instant]
+    transactionType <- c.downField(transactionType).as[String].map(WaffleTransactionType.apply)
+    price <- c.downField(price).as[Double].map(Price.apply)
+    quantity <- c.downField(quantity).as[Int].map(Quantity.apply)
+    userName <- c.downField(userName).as[String].map(UserName.apply)
+  } yield WaffleTransaction(id, timestamp, transactionType, price, quantity, userName)
+
+  given EntityDecoder[IO, WaffleTransaction] = jsonOf[IO, WaffleTransaction]
+  given EntityEncoder[IO, WaffleTransaction] = jsonEncoderOf[IO, WaffleTransaction]
 }

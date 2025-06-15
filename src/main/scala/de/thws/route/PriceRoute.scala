@@ -1,35 +1,31 @@
 package de.thws
 package route
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.server.Directives.{complete, get, path}
-import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
+import cats.effect.*
 import de.thws.domain.{WafflePrice, WafflePriceHistory}
-import de.thws.json.{PriceHistoryJsonFormat, PriceJsonFormat}
+import de.thws.json.PriceHistoryJsonFormat.given
+import de.thws.json.PriceJsonFormat.given
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService}
+import io.circe.syntax.*
+import org.http4s.*
+import org.http4s.Method.*
+import org.http4s.circe.*
+import org.http4s.dsl.io.*
 
 class PriceRoute(
                   wafflePriceService: WafflePriceService,
                   wafflePriceUpdateService: WafflePriceUpdateService,
-                  priceJsonFormat: PriceJsonFormat,
-                  priceHistoryJsonFormat: PriceHistoryJsonFormat
-                ) extends SprayJsonSupport {
+                ) {
 
-  def routes: Route = {
-
-    path("price") {
-      get {
-        val price: WafflePrice = wafflePriceUpdateService.currentPrice
-        complete(priceJsonFormat.write(price))
-      }
-    } ~ path("priceHistory") {
-      get {
-        val priceHistory: WafflePriceHistory = wafflePriceService.wafflePriceHistory()
-        complete(priceHistoryJsonFormat.write(priceHistory))
-      }
-    }
+  val route: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root / "price" =>
+      val price: WafflePrice = wafflePriceUpdateService.currentPrice
+      Ok(price.asJson)
+    case GET -> Root / "priceHistory" =>
+      val priceHistory: WafflePriceHistory = wafflePriceService.wafflePriceHistory()
+      Ok(priceHistory.asJson)
   }
+
 } 
 
 

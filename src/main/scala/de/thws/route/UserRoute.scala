@@ -1,12 +1,15 @@
 package de.thws.route
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.server.{Directives, Route}
+import cats.effect.IO
 import de.thws.domain.{TradeRequest, UserName}
-import de.thws.json.{TradeRequestJsonFormat, TransactionJsonFormat}
+import de.thws.json.TradeRequestJsonFormat.given
+import de.thws.json.TransactionJsonFormat.given
 import de.thws.service.{WafflePriceUpdateService, WaffleTransactionService}
-import spray.json.DefaultJsonProtocol
+import io.circe.syntax.*
+import org.http4s.*
+import org.http4s.Method.*
+import org.http4s.circe.*
+import org.http4s.dsl.io.*
 
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -14,24 +17,21 @@ import java.nio.charset.StandardCharsets
 class UserRoute(
                  val waffleTransactionService: WaffleTransactionService,
                  val priceUpdateService: WafflePriceUpdateService,
-                 implicit val tradeRequestJsonFormat: TradeRequestJsonFormat,
-                 val transactionJsonFormat: TransactionJsonFormat
-               ) extends Directives, SprayJsonSupport, DefaultJsonProtocol {
+               ) {
 
+  val route: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case req@POST -> Root / "user" / encodedUserName / "trade" =>
+      val userName = UserName(URLDecoder.decode(encodedUserName, StandardCharsets.UTF_8.toString))
 
-  val route: Route = path("user" / Segment / "trade") { encodedUserName =>
+      req.as[TradeRequest].attempt.flatMap {
+        case Left(ioError) =>
+          BadRequest(ioError.getMessage)
+        case Right(tradeRequest) =>
+          val tradeCommand = tradeRequest.toCommand(userName)
+          val price = priceUpdateService.currentPrice
+          val transaction = waffleTransactionService.add(tradeCommand, price).get
 
-    val userName = UserName(URLDecoder.decode(encodedUserName, StandardCharsets.UTF_8.toString))
-
-    post {
-      entity(as[TradeRequest]) { tradeRequest =>
-        val tradeCommand = tradeRequest.toCommand(userName)
-        val price = priceUpdateService.currentPrice
-        waffleTransactionService
-          .add(tradeCommand, price)
-          .map(r => complete(transactionJsonFormat.write(r)))
-          .getOrElse(complete(StatusCodes.InternalServerError))
+          Created(transaction.asJson)
       }
-    }
   }
 }

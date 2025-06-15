@@ -1,5 +1,6 @@
 package de.thws.domain
 
+import de.thws.domain.Price
 import org.postgresql.util.PGobject
 
 import java.time.Instant

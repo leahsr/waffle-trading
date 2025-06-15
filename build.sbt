@@ -19,22 +19,20 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor-typed" % "2.8.8",
-  "com.typesafe.akka" %% "akka-stream" % "2.8.8",
-  "com.typesafe.akka" %% "akka-http" % "10.5.3",
-  "com.typesafe.akka" %% "akka-http-spray-json" % "10.5.3",
-)
-
-libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.5.18",
   "ch.qos.logback" % "logback-core" % "1.5.18",
 )
 
-//libraryDependencies ++= Seq(
-//  "org.http4s" %% "http4s-ember-client" % "0.23.30",
-//  "org.http4s" %% "http4s-ember-server" % "0.23.30",
-//  "org.http4s" %% "http4s-dsl"          % "0.23.30",
-//)
+val http4sVersion = "0.23.30"
+libraryDependencies ++= Seq(
+  "org.http4s" %% "http4s-ember-client" % http4sVersion,
+  "org.http4s" %% "http4s-ember-server" % http4sVersion,
+  "org.http4s" %% "http4s-dsl" % http4sVersion,
+  "org.http4s" %% "http4s-circe" % http4sVersion,
+  "io.circe" %% "circe-generic" % "0.14.14",
+  "io.circe" %% "circe-parser" % "0.14.14",
+  "io.circe" %% "circe-generic-extras" % "0.14.5-RC1",
+)
 
 libraryDependencies ++= Seq(
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.14.3" % "it",

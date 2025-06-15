@@ -1,14 +1,13 @@
 package de.thws.json
 
 import de.thws.domain.WafflePriceHistory
+import de.thws.json.PriceHistoryJsonFormat.given
+import io.circe.*
+import io.circe.syntax.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import spray.json.JsonParser
 
 class PriceHistoryJsonFormatTest extends AnyFlatSpec with Matchers {
-
-  val priceJsonFormat = new PriceJsonFormat
-  val priceHistoryJsonFormat = new PriceHistoryJsonFormat(priceJsonFormat)
 
   it should "parse history to json" in {
 
@@ -18,13 +17,13 @@ class PriceHistoryJsonFormatTest extends AnyFlatSpec with Matchers {
       Seq(wafflePrice, wafflePrice, wafflePrice)
     )
 
-    val expectedJson = JsonParser(
+    val expectedJson = parser.parse(
       s"""
          |[$json, $json, $json]
          |""".stripMargin
-    )
+    ).toTry.get
 
-    priceHistoryJsonFormat.write(priceHistory) shouldEqual expectedJson
+    priceHistory.asJson shouldEqual expectedJson
 
   }
 

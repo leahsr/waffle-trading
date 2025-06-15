@@ -1,20 +1,20 @@
 package de.thws
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import com.typesafe.config.ConfigFactory
+import cats.effect.{ExitCode, IO}
+import com.comcast.ip4s.Literals.ipv6
+import com.comcast.ip4s.{ipv4, ipv6, port}
 import de.thws.database.{JdbcConnections, Migration, TransactionService}
-import de.thws.json.{PriceHistoryJsonFormat, PriceJsonFormat, TradeRequestJsonFormat, TransactionJsonFormat}
 import de.thws.repository.{WafflePriceRepository, WaffleTransactionsRepository}
 import de.thws.route.{PriceRoute, UserRoute, WaffleTradingRoute}
 import de.thws.service.{WafflePriceService, WafflePriceUpdateService, WaffleTransactionService}
+import org.http4s.ember.server.*
+import org.http4s.implicits.*
+import org.http4s.server.Router
+import org.http4s.server.middleware.Logger
 
 class AppInitializer {
 
-  private val config = ConfigFactory.load("akka.conf")
-  implicit val system: ActorSystem = ActorSystem("waffle-trading")
-
-  def start(databaseConfiguration: DatabaseConfiguration): Unit = {
+  def start(databaseConfiguration: DatabaseConfiguration): IO[ExitCode] = {
 
     val jdbcConnections = new JdbcConnections(databaseConfiguration)
     val transactionService = new TransactionService(jdbcConnections)
@@ -28,16 +28,21 @@ class AppInitializer {
     val wafflePriceService = new WafflePriceService(transactionService, wafflePriceRepository)
     val wafflePriceUpdateService = new WafflePriceUpdateService(wafflePriceService)
 
-    val tradeRequestJsonFormat = TradeRequestJsonFormat()
-    val transactionJsonFormat = TransactionJsonFormat()
-    val priceJsonFormat = PriceJsonFormat()
-    val priceHistoryJsonFormat = PriceHistoryJsonFormat(priceJsonFormat)
-
-    val marketplaceRoute = new PriceRoute(wafflePriceService, wafflePriceUpdateService, priceJsonFormat, priceHistoryJsonFormat)
-    val userRoute = new UserRoute(waffleTransactionService, wafflePriceUpdateService, tradeRequestJsonFormat, transactionJsonFormat)
+    val marketplaceRoute = new PriceRoute(wafflePriceService, wafflePriceUpdateService)
+    val userRoute = new UserRoute(waffleTransactionService, wafflePriceUpdateService)
     val waffleTradingRoute = new WaffleTradingRoute(transactionService, waffleTransactionService, marketplaceRoute, userRoute)
 
-    println("Server online at http://localhost:8080/")
-    Http().newServerAt("localhost", 8080).bind(waffleTradingRoute.route)
+    val loggedRoute = Logger.httpRoutes(logHeaders = true, logBody = true)(waffleTradingRoute.route)
+
+    val httpApp = Router("/" -> loggedRoute).orNotFound
+
+    EmberServerBuilder
+      .default[IO]
+      .withHost(ipv4"0.0.0.0")
+      .withHost(ipv6"::")
+      .withPort(port"8080")
+      .withHttpApp(httpApp)
+      .build
+      .use(_ => IO.never)
   }
 }
