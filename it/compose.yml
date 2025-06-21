@@ -48,6 +48,8 @@ services:
         condition: service_healthy
     environment:
       WAFFLE_API_URL: "http://waffle-api:8080"
+    volumes:
+      - "./gatling-it/:/waffle/target/gatling-it/"
 
 volumes:
   waffle-data:
