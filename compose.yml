@@ -19,17 +19,17 @@ services:
       timeout: 1s
       retries: 10
 
-#  waffle-api:
-#    container_name: waffle-api
-#    build:
-#      context: .
-#    environment:
-#      WAFFLE_USER: waffle
-#      WAFFLE_PASSWORD: password
-#      WAFFLE_DB_URL: jdbc:postgresql://waffle-db:5432/waffle
-#    depends_on:
-#      waffle-db:
-#        condition: service_healthy
+  waffle-api:
+    container_name: waffle-api
+    build:
+      context: .
+    environment:
+      WAFFLE_USER: waffle
+      WAFFLE_PASSWORD: password
+      WAFFLE_DB_URL: jdbc:postgresql://waffle-db:5432/waffle
+    depends_on:
+      waffle-db:
+        condition: service_healthy
 
 volumes:
   waffle-data:

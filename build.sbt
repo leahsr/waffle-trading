@@ -1,3 +1,5 @@
+import sbtassembly.AssemblyKeys.assembly
+
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "3.7.0"
@@ -8,6 +10,14 @@ lazy val root = (project in file("."))
   )
 
 lazy val IntegrationTest = config("it")
+
+ThisBuild / assemblyMergeStrategy  := {
+  case PathList("module-info.class") => MergeStrategy.discard
+  case x if x.endsWith("/module-info.class") => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
 
 enablePlugins(GatlingPlugin)
 
