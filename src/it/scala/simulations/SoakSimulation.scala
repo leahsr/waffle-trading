@@ -5,14 +5,15 @@ import io.gatling.http.protocol.HttpProtocolBuilder
 import scenarios.WaffleScenarios
 import utils.Utils
 
-// Generally used to monitor the application performance with a fixed load over a long period of time.
-// Useful for checking memory leaks and database degradation over time.
+import scala.concurrent.duration.DurationInt
+
 class SoakSimulation extends Simulation {
   setUp(
     WaffleScenarios.standardTrafficScenario.inject(
-      constantConcurrentUsers(1000).during(60)
+      constantConcurrentUsers(1000).during(15.minutes)
     ).protocols(Utils.baseHttpProtocol)
+  ).assertions(
+    global.successfulRequests.percent.gte(99),
+    global.responseTime.percentile3.lte(200)
   )
-
-  //  private val assertion = global.successfulRequests.count.is(1)
 }

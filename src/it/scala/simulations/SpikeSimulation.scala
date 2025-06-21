@@ -5,16 +5,11 @@ import io.gatling.http.protocol.HttpProtocolBuilder
 import scenarios.WaffleScenarios
 import utils.Utils
 
-/***
- * Test how the system handles sudden large spikes in traffic.
- * Simulates real-world events (e.g., market open) where many users hit the system simultaneously.
- * It checks autoscaling or crash resilience.
- */
 class SpikeSimulation extends Simulation {
   setUp(
-    WaffleScenarios.standardTrafficScenario.inject(
+    WaffleScenarios.priceHistory.inject(
       nothingFor(5),
-      atOnceUsers(500)
+      atOnceUsers(5000)
     )
   ).protocols(Utils.baseHttpProtocol)
 }

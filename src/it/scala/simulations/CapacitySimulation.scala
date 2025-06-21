@@ -1,19 +1,24 @@
 package simulations
 
 import io.gatling.core.Predef.*
+import io.gatling.http.protocol.HttpProtocolBuilder
 import scenarios.WaffleScenarios
 import utils.Utils
 
-// Generally used to determine the maximum number of virtual users your application can sustain.
-// Users arrival rate gets incremented over multiple levels, and we analyze the metrics
-// (response time, error ratio..etc) at each level according to our benchmarks.
 class CapacitySimulation extends Simulation {
+
   setUp(
     WaffleScenarios.standardTrafficScenario.inject(
       incrementUsersPerSec(50)
-        .times(10)
-        .eachLevelLasting(10)
-        .separatedByRampsLasting(4)
+        .times(20)
+        .eachLevelLasting(15)
+        .separatedByRampsLasting(5)
     )
   ).protocols(Utils.baseHttpProtocol)
+    // this assertion is only for demonstration purposes
+    // normally does not make sense for capacity tests
+    .assertions(
+      global.successfulRequests.percent.gte(99),
+      global.responseTime.percentile3.lte(500)
+    )
 }
