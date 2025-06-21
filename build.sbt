@@ -21,8 +21,10 @@ ThisBuild / assemblyMergeStrategy  := {
 
 enablePlugins(GatlingPlugin)
 
+dependencyOverrides += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
+
 libraryDependencies ++= Seq(
-  "org.postgresql" % "postgresql" % "42.7.6",
+  "org.postgresql" % "postgresql" % "42.7.7",
   "com.zaxxer" % "HikariCP" % "6.3.0",
   "org.scalactic" %% "scalactic" % "3.2.19",
   "org.scalatest" %% "scalatest" % "3.2.19" % "test",
@@ -31,6 +33,7 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.5.18",
   "ch.qos.logback" % "logback-core" % "1.5.18",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
 )
 
 val http4sVersion = "0.23.30"
@@ -45,6 +48,6 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.14.3" % "it",
-  "io.gatling" % "gatling-test-framework" % "3.14.3" % "it",
+  "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.14.3" % "it" exclude("com.typesafe.scala-logging", "scala-logging_2.13"),
+  "io.gatling" % "gatling-test-framework" % "3.14.3" % "it" exclude("com.typesafe.scala-logging", "scala-logging_2.13"),
 )

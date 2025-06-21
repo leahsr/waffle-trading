@@ -1,6 +1,7 @@
 package de.thws
 package service
 
+import com.typesafe.scalalogging.LazyLogging
 import de.thws.domain.{Price, WafflePrice}
 
 import java.util.concurrent.atomic.AtomicReference
@@ -10,7 +11,7 @@ import scala.util.Random
 class WafflePriceUpdateService(
                                 wafflePriceService: WafflePriceService,
                                 val initial: Double = 2.5
-                              ) {
+                              ) extends LazyLogging {
 
   private val currentPriceReference = new AtomicReference(WafflePrice(Price(this.initial)))
   private val ticker = new java.util.Timer()
@@ -25,7 +26,7 @@ class WafflePriceUpdateService(
 
     ticker.scheduleAtFixedRate(new java.util.TimerTask {
       def run(): Unit = scheduler.run()
-    }, 0, 30.seconds.toMillis)
+    }, 0, 1.seconds.toMillis)
   }
 
   private def updatePrice(): Unit = {
@@ -34,7 +35,7 @@ class WafflePriceUpdateService(
     val newPrice = ((old.price.value + change).max(0.5) * 100.0).round / 100.0
     val newWafflePrice = WafflePrice(Price(newPrice))
     
-    println(s"New Price: $newWafflePrice")
+    logger.info(s"New Price: $newWafflePrice")
     wafflePriceService.add(newWafflePrice)
     currentPriceReference.set(newWafflePrice)
   }
