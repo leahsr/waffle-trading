@@ -10,7 +10,7 @@ import utils.Utils
 class SoakSimulation extends Simulation {
   setUp(
     WaffleScenarios.standardTrafficScenario.inject(
-      constantConcurrentUsers(100).during(60)
+      constantConcurrentUsers(1000).during(60)
     ).protocols(Utils.baseHttpProtocol)
   )
 

@@ -1,0 +1,9 @@
+FROM sbtscala/scala-sbt:eclipse-temurin-23.0.2_7_1.10.11_3.7.0
+
+WORKDIR /waffle
+
+COPY build.sbt .
+COPY project/ ./project/
+COPY src/ ./src/
+
+CMD ["sbt", "GatlingIt, "test"]
