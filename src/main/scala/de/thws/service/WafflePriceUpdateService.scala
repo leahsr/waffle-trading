@@ -31,7 +31,7 @@ class WafflePriceUpdateService(
   private def updatePrice(): Unit = {
     val old = currentPriceReference.get()
     val change = Random.between(-0.2, 0.2)
-    val newPrice = ((old.price.value + change).max(0.5) * 100).round / 100
+    val newPrice = ((old.price.value + change).max(0.5) * 100.0).round / 100.0
     val newWafflePrice = WafflePrice(Price(newPrice))
     
     println(s"New Price: $newWafflePrice")
