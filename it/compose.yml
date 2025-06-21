@@ -14,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "waffle", "-U", "waffle" ]
+      test: ["CMD", "pg_isready", "-q", "-d", "waffle", "-U", "waffle"]
       interval: 1s
       timeout: 1s
       retries: 10
@@ -31,10 +31,12 @@ services:
       waffle-db:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/price" ]
-      interval: 5s
-      timeout: 2s
-      retries: 500
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8080/price"]
+      interval: 1s
+      timeout: 1s
+      retries: 5
+    ports:
+      - "8080:8080"
 
   waffle-it:
     container_name: waffle-it
@@ -44,6 +46,9 @@ services:
     depends_on:
       waffle-api:
         condition: service_healthy
+    environment:
+      WAFFLE_API_URL: "http://waffle-api:8080"
 
 volumes:
   waffle-data:
+

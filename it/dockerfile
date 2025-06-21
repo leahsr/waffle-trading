@@ -6,4 +6,4 @@ COPY build.sbt .
 COPY project/ ./project/
 COPY src/ ./src/
 
-CMD ["sbt", "GatlingIt, "test"]
+CMD ["sbt", "GatlingIt/test"]
