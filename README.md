@@ -1,6 +1,8 @@
 # Waffle Trading
 
-Dieses Projekt stellt eine Trading API mit integrierten Gatling Performance-Tests bereit. Es kann entweder über IntelliJ oder vollständig per Docker ausgeführt werden.
+Dieses Projekt stellt eine Trading API mit integrierten Gatling
+Performance-Tests bereit. Es kann entweder über IntelliJ oder vollständig per
+Docker ausgeführt werden. Alle Tests zusammen können bis zu 30 Minuten dauern.
 
 ---
 
@@ -17,9 +19,14 @@ Dieses Projekt stellt eine Trading API mit integrierten Gatling Performance-Test
    Im Hauptverzeichnis des Projekts folgenden Befehl ausführen:  
    `docker compose up`
    Dies startet die Datenbank.
-2. API starten  
-   In IntelliJ in die `Boot` Klasse starten, um die API zu aktivieren.
-3. Gatling-Tests ausführen  
+
+2. _(Geht eventuell automatisch)_ Java SDK mit version 23 auswählen. Im Dialog
+   `File` -> `Project Structure` unter `Project Settings` -> `Project` -> `SDK`
+
+3. API starten  
+   In IntelliJ in die `Boot` (`src/main/scala/de/thws/Boot.scala`) Klasse starten, um die API zu aktivieren.
+
+4. Gatling-Tests ausführen  
    Die Tests befinden sich unter:  
    `src/it/scala/simulations`
 
@@ -30,7 +37,7 @@ Dieses Projekt stellt eine Trading API mit integrierten Gatling Performance-Test
    - Eine bestimmte Simulation starten:  
       `GatlingIt / testOnly *SimulationName*`
 
-4. Testberichte anzeigen  
+5. Testberichte anzeigen  
    Die Reports werden nach dem Lauf unter folgendem Pfad abgelegt:  
    `target/gatling/simulation-name/index.html`
    Nach erfolgreichem Test erscheint im Terminal zudem ein Link zur index.html, der direkt geöffnet werden kann.
